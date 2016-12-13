@@ -1,0 +1,273 @@
+%% File: lat-nae-3sat.tex
+%% Authors: William DeMeo and Hyeyoung Shin
+%% Date: Jan 11, 2015
+%% Updated: Nov 15, 2016
+%% Copyright (c) 2016 William DeMeo and Hyeyoung Shin
+%% 
+\documentclass[12pt]{amsart}
+% The following \documentclass options may be useful:
+% preprint      Remove this option only once the paper is in final form.
+% 10pt          To set in 10-point type instead of 9-point.
+% 11pt          To set in 11-point type instead of 9-point.
+% numbers       To obtain numeric citation style instead of author/year.
+
+%% \usepackage{setspace}\onehalfspacing
+
+\usepackage{amsmath}
+\usepackage{amscd,amssymb,amsthm} %, amsmath are included by default
+\usepackage{latexsym,stmaryrd,mathrsfs,enumerate,scalefnt,ifthen}
+\usepackage{mathtools}
+\usepackage[mathcal]{euscript}
+\usepackage[colorlinks=true,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
+\usepackage{url}
+\usepackage{scalefnt}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage[margin=1in]{geometry}
+\usepackage{scrextend}
+
+%%////////////////////////////////////////////////////////////////////////////////
+%% Theorem styles
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{prop}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{Fact}[theorem]{Fact}
+\newtheorem*{fact}{Fact}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{examples}[theorem]{Examples}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{cor}{Corollary}
+\newtheorem*{remark}{Remark}
+\newtheorem*{remarks}{Remarks}
+\newtheorem*{obs}{Observation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Acronyms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \usepackage[acronym, shortcuts]{glossaries}
+%\usepackage[smaller]{acro}
+\usepackage[smaller]{acronym}
+\usepackage{xspace}
+
+%% \acs{CSP} -- short version of the acronym\\
+%% \acl{CSP} -- expanded acronym without mentioning the acronym.\\
+%% \acp{CSP} -- plurals.\\
+%% \acfp{CSP} -- long forms into plurals.\\
+%% \acsp{CSP} -- short form into a plural.\\
+%% \aclp{CSP} -- long form into a plural.\\
+%% \acfi{CSP} -- Full Name acronym in italics and abbreviated form in upshape.\\
+%% \acsu{CSP} -- short form of the acronym and marks it as used.\\
+%% \aclu{CSP} -- Prints the long form of the acronym and marks it as used.\\
+
+%% ------ acro defs ----------
+\acrodef{ccp}[CCP]{covered coatoms problem}
+\acrodef{lics}[LICS]{Logic in Computer Science}
+\acrodef{sat}[SAT]{satisfiability}
+\acrodef{nae}[NAE]{not-all-equal}
+\acrodef{ctb}[CTB]{cube term blocker}
+\acrodef{tct}[TCT]{tame congruence theory}
+\acrodef{wnu}[WNU]{weak near-unanimity}
+\acrodef{CSP}[CSP]{constraint satisfaction problem}
+\acrodef{MAS}[MAS]{minimal absorbing subuniverse}
+\acrodef{MA}[MA]{minimal absorbing}
+\acrodef{cib}[CIB]{commutative idempotent binar}
+\acrodef{sd}[SD]{semidistributive}
+\acrodef{NP}[NP]{nondeterministic polynomial time}
+\acrodef{P}[P]{polynomial time}
+\acrodef{PeqNP}[P $ = $ NP]{P is NP}
+\acrodef{PneqNP}[P $ \neq $ NP]{P is not NP}
+
+\newcommand{\ccp}{\acs{ccp}\xspace}
+%% ------ acro macros ----------
+\newcommand{\sat}{\acs{sat}\xspace}
+\newcommand{\nae}{\acs{nae}\xspace}
+\newcommand{\csps}{\acsp{CSP}\xspace}
+\newcommand{\sd}{\acs{sd}\xspace}
+\newcommand{\cib}{\acs{cib}\xspace}
+\newcommand{\cibs}{\acsp{cib}\xspace}
+\newcommand{\PeqNP}{\acs{PeqNP}\xspace}
+\newcommand{\PneqNP}{\acs{PneqNP}\xspace}
+\newcommand{\NPcomplete}{\acs{NP}-complete\xspace}
+\newcommand{\NP}{\acs{NP}\xspace}
+\renewcommand{\P}{\acs{P}\xspace}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{inputs/proof-dashed}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Put new macros in the macros.sty file
+\usepackage{inputs/macros}
+
+\usepackage[backend=bibtex]{biblatex}
+\bibliography{inputs/refs.bib}
+
+\begin{document}
+
+\title[NP-completeness of coatom counting]{Filter membership of coatoms
+  in a\\ partition lattice is NP-complete}
+\date{\today}
+\author[W.~DeMeo]{William DeMeo}
+\address{University of Hawaii}
+\email{williamdemeo@gmail.com}
+
+\author[H.~Shin]{Hyeyoung Shin}
+\address{University of Hawaii}
+\email{hyeyoungshinw@gmail.com}
+
+%% \thanks{The authors would like to extend special thanks to...}
+
+\maketitle
+
+\begin{abstract}
+We show that 3\sat %% [3-SAT](https://en.wikipedia.org/wiki/3sat)
+reduces to the problem of deciding whether all coatoms in a certain partition
+lattice are contained in the union of a collection of certain principal filters
+of the lattice, so the latter problem is \NP-complete.
+We conclude with a discussion of the tractability of
+such filter membership problems.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+We show that 3\sat %% [3-SAT](https://en.wikipedia.org/wiki/3sat)
+reduces to the problem of deciding whether all coatoms in a certain partition
+lattice are contained in the union of a collection of certain principal filters
+of the lattice. Thus the latter problem, which we call the
+\acfi{ccp}, is \NP-complete.
+To prove this, we show that \nae-3\sat reduces to \ccp.
+We conclude with a discussion of the tractability of
+such a filter membership problem. In particular, we describe some first steps
+toward a polynomial-time algorithm for solving instances of \ccp.
+
+\subsection{Reduction of 3\sat to \nae-3\sat}
+The problem \emph{not-all-equal satisfiability} (\nae-\sat) is a variation on \sat in which
+a formula is satisfied if and only if each clause contains at least one true
+literal and one false literal.  Thus, a clause is satisfied if and only
+if it is not the case that all literals in that clause have the same value
+(hence, ``not-all-equal'').
+The problem \nae-3\sat is the special case of \nae-\sat in which each cluase has exactly
+three literals.
+
+We first demostrate the well known fact that \nae-3\sat is \NP-complete.
+It is obviously in \NP because a truth assignment is a certificate
+that can be confirmed or denied in polynomial-time.
+On the other hand, \nae-3\sat is \NP-hard because 3\sat reduces to it, as we now
+verify.
+
+Introducd two new variables, $u$ and $v$.
+%%  3\sat to \nae-4\sat and then to reduce
+%% \nae-4\sat to \nae-3\sat. 
+Given a clause $x_1 \vee x_2 \vee x_3$ in a 3\sat formula,
+replace $x_i$ with $y_i$ and $\neg x_i$ with
+$\neg y_i$ is such a way that $x_i = T$ if and only if
+$y_i \neq u$ and $x_i = F$ if and only if $y_i = u$.
+This results in the \nae-4\sat clause 
+$(y_1, y_2, y_3, u)$.  This reduction works because
+$(y_1, y_2, y_3, u)$ is satisfied if and only if at least one of the $y_i$'s is
+different from $u$, which holds if and only if
+at least one member of $\{x_1$, $x_2$, $x_3\}$ is true.
+This shows that 3\sat is reducible to \nae-4\sat, so the latter is \NP-hard.
+
+To reduce \nae-4\sat to \nae-3\sat, we use our second reference variable, $v$.
+Given a clause $(y_1, y_2, y_3, u)$ in an \nae-4\sat formula,
+we use $v$ and $\neg v$ accordingly to reduce it to two 3\sat clauses
+\[(y_1, y_2, v) \wedge (y_3, u, \neg v). \] This reduction works
+because appropriate $v$ and $\neg v$ in each clause will prevent
+all-three-true or all-three-false clauses.
+
+\subsection{Reduction of \nae-3\sat to \ccp}
+Consider the relational structure $\mathbb B = \langle \{0, 1\}, R\rangle$
+where $R$ is the ternary relation $\{0, 1\}^3 - \{(0,0,0), (1,1,1)\}$.
+That is,
+\[ R = \{(0,0,1), (0,1,0), (0,1,1), (1,0,0), (1,0,1), (1,1,0)\}.\]
+The \csp associated with the relational structure $\mathbb B$
+is denoted by $\operatorname{CSP}(\mathbb B)$ and described as follows:
+An \defn{instance} %% of $\operatorname{CSP}(\mathbb B)$, we mean
+is a (finite) relational structure $\mathbb A = \langle A, S \rangle$
+with a single ternary relation $S$, and $\operatorname{CSP}(\mathbb B)$ is the
+following decision problem:
+
+%% \begin{problem}
+\begin{quote}
+{\bf Problem.} Given an instance $\mathbb A = \langle A, S \rangle$,
+does there exist a (relational structure) homomorphism from $\mathbb A$ to $\mathbb B$?
+\end{quote}
+%% \end{problem}
+
+In other words, does there exist a function
+$f\colon A \rightarrow \{0,1\}$ such that $(f(a), f(b), f(c)) \in R$ whenever
+$(a, b, c) \in S$?
+
+The kernel of a function $f$ with codomain $\{0,1\}$ has two equivalence
+classes---namely, $f^{-1}\{0\}$ and $f^{-1}\{1\}$.
+If one of these classes is empty, then $f$ is constant 
+in which case it cannot be a homomorphism into the relational structure
+$\langle \{0, 1\}, R\rangle$ (since $(0,0,0)\notin R$ and $(1,1,1)\notin R$).
+Therefore, the kernel of every homomorphism $f \colon \mathbb A \rightarrow \mathbb B$
+has two nonempty blocks.
+
+Now, given a partition of $A$ into two blocks, $\pi = |A_1|A_2|$,
+there are exactly two functions of type $A \rightarrow \{0,1\}$
+with kernel $\pi$. One is $f(x) = 0$ iff $x \in A_1$ and the other is $1-f$.
+It is obvious that either both $f$ and $1-f$ are homomorphisms or neither $f$
+nor $1-f$ is a homomorphism. Indeed, both are homomorphisms if and only if
+for all tuples $(a,b,c) \in S$ we have $\{a,b,c\} \nsubseteq A_1$ and
+$\{a,b,c\} \nsubseteq A_2$.
+Neither is a homomorphism if and only if there exists
+$(a,b,c) \in S$ with $\{a,b,c\} \subseteq A_1$ or
+$\{a,b,c\} \subseteq A_2$.
+
+Now, for each tuple $s = (a,b,c) \in S$, we let $\im(s)$ (or simply $\im s$)  denote the image of
+$\{0,1,2\}$ under $s$ (viewing the sequence $s$ as a function with domain the 
+``index set'' $\{0,1,2\}$ and codomain the set $A$).
+Furthermore, we let $\< \im s\>$ denote the equivalence relation on $A$
+generated by $\im s$.  Thus, if $s = (a,b,c)$, then 
+\[
+\< \im s \> = \{(a,b), (b,a), (a,c), (c,a), (b,c), (c,b)\} \cup \{(x,x) : x \in A\}.
+\]
+The partition corresponding to $\langle \im s \rangle$ is
+$\pi_{\langle \im s\rangle} = |a, b, c|x_1|x_2|\cdots$.
+It is clear that a function $f\colon A \rightarrow \{0, 1\}$ is a homomorphism from
+$\mathbb A$ to $\mathbb B$ if and only if for all $s \in S$
+the relation $\langle \im s\rangle$ does not belong to the kernel of $f$.
+Therefore, a solution to the instance $\mathbb A = \langle A, S \rangle$ of
+$\operatorname{CSP}(\mathbb B)$ exists if and only if there is at least one coatom
+in the lattice of equivalence relations of $A$ that is not contained in the union
+$ \bigcup_{s\in S} \, ^\uparrow\langle \im s \rangle $ of principal filters.
+
+The \defn{covered coatoms problem} (\ccp) is the following:
+Given a set $A$ and a list
+$s_1 = (a_1, b_1, c_1), s_2=(a_2, b_2, c_2), \dots, s_n =(a_n, b_n, c_n)$
+of triples with elements in $A$, decide whether all of the coatoms
+of the lattice $\prod_A$ of partitions of $A$ are contained in the union
+$ \bigcup_{i=1}^n \, ^\uparrow\langle \im s_i \rangle$ of principal filters.
+
+
+%% \section{Definitions and Notations}
+%% \label{sec:defin-notat}
+
+%% My GitHub repo~\cite{overalgebras-github}.
+%% \appendix
+%% \section{Appendix Title}
+%% This is the text of the appendix, if you need one.
+
+%\bibliographystyle{amsplain} %% or amsalpha
+%% \bibliographystyle{plain-url}
+\printbibliography
+
+
+\end{document}
