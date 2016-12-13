@@ -8,6 +8,12 @@ This repository contains some notes about a problem involving coverings of coato
 **Year:** 2016  
 
 **Abstract:**
+We show that [3-SAT](https://en.wikipedia.org/wiki/3sat)
+reduces to the problem of deciding whether all coatoms in a certain partition
+lattice are contained in the union of a collection of certain principal filters
+of the lattice, so the latter problem is NP-complete.
+We conclude with a discussion of the tractability of
+such filter membership problems.
 
 **BibTeX entry:**
 
