@@ -154,40 +154,43 @@ such a filter membership problem. In particular, we describe some first steps
 toward a polynomial-time algorithm for solving instances of \ccp.
 
 \subsection{Reduction of 3\sat to \nae-3\sat}
-The problem \emph{not-all-equal satisfiability} (\nae-\sat) is a variation on \sat in which
-a formula is satisfied if and only if each clause contains at least one true
-literal and one false literal.  Thus, a clause is satisfied if and only
-if it is not the case that all literals in that clause have the same value
-(hence, ``not-all-equal'').
-The problem \nae-3\sat is the special case of \nae-\sat in which each cluase has exactly
-three literals.
+\\
+(This section is under major revision)
 
-We first demostrate the well known fact that \nae-3\sat is \NP-complete.
-It is obviously in \NP because a truth assignment is a certificate
-that can be confirmed or denied in polynomial-time.
-On the other hand, \nae-3\sat is \NP-hard because 3\sat reduces to it, as we now
-verify.
+% The problem \emph{not-all-equal satisfiability} (\nae-\sat) is a variation on \sat in which
+% a formula is satisfied if and only if each clause contains at least one true
+% literal and one false literal.  Thus, a clause is satisfied if and only
+% if it is not the case that all literals in that clause have the same value
+% (hence, ``not-all-equal'').
+% The problem \nae-3\sat is the special case of \nae-\sat in which each cluase has exactly
+% three literals.
 
-Introducd two new variables, $u$ and $v$.
-%%  3\sat to \nae-4\sat and then to reduce
-%% \nae-4\sat to \nae-3\sat. 
-Given a clause $x_1 \vee x_2 \vee x_3$ in a 3\sat formula,
-replace $x_i$ with $y_i$ and $\neg x_i$ with
-$\neg y_i$ is such a way that $x_i = T$ if and only if
-$y_i \neq u$ and $x_i = F$ if and only if $y_i = u$.
-This results in the \nae-4\sat clause 
-$(y_1, y_2, y_3, u)$.  This reduction works because
-$(y_1, y_2, y_3, u)$ is satisfied if and only if at least one of the $y_i$'s is
-different from $u$, which holds if and only if
-at least one member of $\{x_1$, $x_2$, $x_3\}$ is true.
-This shows that 3\sat is reducible to \nae-4\sat, so the latter is \NP-hard.
+% We first demostrate the well known fact that \nae-3\sat is \NP-complete.
+% It is obviously in \NP because a truth assignment is a certificate
+% that can be confirmed or denied in polynomial-time.
+% On the other hand, \nae-3\sat is \NP-hard because 3\sat reduces to it, as we now
+% verify.
 
-To reduce \nae-4\sat to \nae-3\sat, we use our second reference variable, $v$.
-Given a clause $(y_1, y_2, y_3, u)$ in an \nae-4\sat formula,
-we use $v$ and $\neg v$ accordingly to reduce it to two 3\sat clauses
-\[(y_1, y_2, v) \wedge (y_3, u, \neg v). \] This reduction works
-because appropriate $v$ and $\neg v$ in each clause will prevent
-all-three-true or all-three-false clauses.
+% Introducd two new variables, $u$ and $v$.
+% %%  3\sat to \nae-4\sat and then to reduce
+% %% \nae-4\sat to \nae-3\sat. 
+% Given a clause $x_1 \vee x_2 \vee x_3$ in a 3\sat formula,
+% replace $x_i$ with $y_i$ and $\neg x_i$ with
+% $\neg y_i$ is such a way that $x_i = T$ if and only if
+% $y_i \neq u$ and $x_i = F$ if and only if $y_i = u$.
+% This results in the \nae-4\sat clause 
+% $(y_1, y_2, y_3, u)$.  This reduction works because
+% $(y_1, y_2, y_3, u)$ is satisfied if and only if at least one of the $y_i$'s is
+% different from $u$, which holds if and only if
+% at least one member of $\{x_1$, $x_2$, $x_3\}$ is true.
+% This shows that 3\sat is reducible to \nae-4\sat, so the latter is \NP-hard.
+
+% To reduce \nae-4\sat to \nae-3\sat, we use our second reference variable, $v$.
+% Given a clause $(y_1, y_2, y_3, u)$ in an \nae-4\sat formula,
+% we use $v$ and $\neg v$ accordingly to reduce it to two 3\sat clauses
+% \[(y_1, y_2, v) \wedge (y_3, u, \neg v). \] This reduction works
+% because appropriate $v$ and $\neg v$ in each clause will prevent
+% all-three-true or all-three-false clauses.
 
 \subsection{Reduction of \nae-3\sat to \ccp}
 Consider the relational structure $\mathbb B = \langle \{0, 1\}, R\rangle$
