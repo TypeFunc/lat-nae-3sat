@@ -244,6 +244,42 @@ $(v_0, v_1, v_2) \notin \{ (0,1,0), (1,0,1)\}$ so that the third
 clause is \nae, and $(v_0, v_1, v_2) \notin \{(0,0,1), (1,1,0)\}$.
 \end{example}
 
+\subsection{Reduction of \naen-3\sat to \nae-3\sat}
+  An instance of \naen-3\sat can be reduced to an equivalent instance of
+\nae-3\sat, as we now explain.  Let $\rho(v_0, v_1, \dots, v_{n-1})$ be
+an instance of \naen-3\sat over the variable set
+$V = \{v_0, v_1, \dots, v_{n-1}\}$.
+Introduce the variable sets $X = \{x_0, x_1, \dots, x_{n-1}\}$ and 
+$Y = \{y_0, y_1, \dots, y_{n-1}\}$, where $x_i = v_i$
+%% represents an occurance of $v_i$
+and  $y_i = \neg v_i$.
+%% represents an occurance of $\neg v_i$.
+Introduce $Z = \{z, z'\}$ and $W = \{w, w', w''\}$.
+Let $U = X \cup Y \cup Z \cup W$. We will define
+an \nae-3\sat instance $\rho'$ over the variable set $U$ which has a
+solution if and only if $\rho$ has a solution.
+We define this instance as follows: let $\rho' \subseteq U \times U \times U$
+and for each triple in $\rho$, we assume that the same triple is contained in $\rho'$
+(but $v_i$ is denoted by $x_i$ and $\neg v_i$ is denoted by $y_i$).
+Next, for each $i$ we let $(x_i, y_i, z)\in \rho'$ and
+$(x_i, y_i, z')\in \rho'$. Lastly, let
+\begin{equation}
+  \label{eq:1}
+\{(z,z',w), (z,z',w'), (z,z',w')\} \subset \rho' \quad \text{ and }
+\end{equation}
+\begin{equation}
+  \label{eq:2}
+(w,w',w'')\in \rho'.
+\end{equation}
+Because of (\ref{eq:2})
+%% The appearance of $(w,w',w'')$ in $\rho'$
+a solution to
+the \naen-3\sat instance $\rho'$ assigns at least one 0 and at least one 1
+to the variables in $W$.
+This and (\ref{eq:1}) imply that a solution must assign distinct
+values to $z$ and $z'$, and this in turn implies that,
+for each $i$, the variables $x_i$ and $y_i$
+must be assigned distinct values.  Thus, $y_i$ plays the role of $\neg x_i$, as desired.
 
 \section{Reduction of 3\sat to \nae-3\sat}
 In this section we recall how a 3\sat instance can be reduced to a
