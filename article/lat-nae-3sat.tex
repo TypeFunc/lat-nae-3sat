@@ -74,6 +74,7 @@
 \acrodef{lics}[LICS]{Logic in Computer Science}
 \acrodef{sat}[SAT]{satisfiability}
 \acrodef{nae}[NAE]{not-all-equal}
+\acrodef{naen}[NAEN]{not-all-equal with negation}
 \acrodef{ctb}[CTB]{cube term blocker}
 \acrodef{tct}[TCT]{tame congruence theory}
 \acrodef{wnu}[WNU]{weak near-unanimity}
@@ -91,6 +92,7 @@
 %% ------ acro macros ----------
 \newcommand{\sat}{\acs{sat}\xspace}
 \newcommand{\nae}{\acs{nae}\xspace}
+\newcommand{\naen}{\acs{naen}\xspace}
 \newcommand{\csps}{\acsp{CSP}\xspace}
 \newcommand{\sd}{\acs{sd}\xspace}
 \newcommand{\cib}{\acs{cib}\xspace}
@@ -153,17 +155,101 @@ We conclude with a discussion of the tractability of
 such a filter membership problem. In particular, we describe some first steps
 toward a polynomial-time algorithm for solving instances of \ccp.
 
-\subsection{Reduction of 3\sat to \nae-3\sat}
-~
-First we find an instance of non-satisfiable NAE-3SAT. Let $\phi =
-\{(x_0, x_1, x_2), (\neg x_0, x_1, x_2), (x_0, \neg x_1, x_2), (x_0,
-x_1, \neg x_2)\}$. $\phi$ is not satisfiable because for it to be
-satisfiable, $(x_0, x_1, x_2) \notin \{ (0,0,0), (1,1,1)\}$ for the
-first clause to be not-all-equal, $(x_0, x_1, x_2) \notin \{(1,0,0),
-(0,1,1,)\}$ for the second clause to be not-all-equal, $(x_0, x_1,
-x_2) \notin \{ (0,1,0), (1,0,1)\}$ for the third clause to be
-not-all-equal, and $(x_0, x_1, x_2) \notin \{(0,0,1), (1,1,0)\}$.
-\vskip1cm
+%% \subsection{Definitions and Notations}
+
+\subsection{Definition of 3\sat}
+Although there are other reasonable conventions, in this paper we
+will take the problem 3\sat to be defined as follows:
+an instance is specified by a finite set
+$V = \{v_0, v_1, \dots, v_{n-1}\}$ of \emph{variables} and
+a formula $\phi$ in conjunctive normal form
+over $V$. To be more precise, we define a \emph{literal} to be a variable or
+the negation of a variable, and we specify an instance of 3\sat 
+by giving a formula $\phi$ that consists of 
+a conjunction of clauses, where each clause is a 
+disjunction of \emph{exactly three distinct literals}.
+When $\phi$ is defined over the set $V = \{v_0, v_1, \dots, v_{n-1}\}$
+of \emph{variables}, we may denote the instance
+by $\phi(v_0, v_1, \dots, v_{n-1})$.
+Of course, we may assume that a variable and its negation do not both
+appear in the same clause, since such clauses are trivially satisfied.
+
+A \emph{solution} to the instance $\phi$ is a function 
+$f: V \to \{0,1\}$ that assigns the value $0$ or 
+$1$ to each variable in such a way that the formula $\phi$ evaluates to true under
+this assignment. That is, $\phi(f(v_0), f(v_1), \dots, f(v_{n-1})) = 1$.
+
+
+%% \subsubsection{Example: a non-satisfiable 3SAT instance}
+\begin{example}
+Consider the following (non-satisfiable) instance of  3\sat:
+let $V = \{v_0, v_1, v_2\}$ be the set of variables that appear in the
+formula $\phi$ and let
+\begin{align*}
+\phi(v_0, v_1, v_2) = (v_0 \vee v_1 \vee v_2) &\wedge
+(\neg v_0 \vee v_1 \vee v_2) \wedge
+(v_0 \vee \neg v_1 \vee v_2) 
+ \wedge (v_0 \vee v_1 \vee \neg v_2) \\
+&\wedge
+(\neg v_0 \vee \neg v_1 \vee v_2)
+\wedge (\neg v_0 \vee v_1 \vee \neg v_2) \wedge
+(v_0 \vee \neg v_1 \vee \neg v_2)
+\end{align*}
+A solution is a function
+$f: \{v_0, v_1, v_2\} \to \{0, 1\}$, such that $\phi(f(v_0), f(v_1), f(v_2))= 1$.
+It's obvious that such a function does not exist since
+each of the eight possible choices for $(f(v_0), f(v_1), f(v_2))$
+results in a failure of one of the clauses of $\phi$.
+(If $(f(v_0), f(v_1), f(v_2)) = (0,0,0)$, then the first clause fails;
+if $(1,0,0)$, then the second fails, and so on.)
+\end{example}
+
+\subsection{Definition of \nae-3\sat and \naen-3\sat}
+We take the problem \nae-3\sat to be defined as follows:
+an instance is specified by a finite set $V = \{v_0, v_1, \dots, v_{n-1}\}$ of
+\emph{variables} and a ternary relation
+$\rho \subseteq V \times V \times V$, where 
+we assume
+for every $(v_{i0}, v_{i1}, v_{i2}) \in \rho$ 
+that $v_{i0}$, $v_{i1}$,  and $v_{i2}$ are distinct positive literals
+(i.e., non-negated variables).
+A \emph{solution} to such an instance %%$\rho$ %% (v_0, v_1, \dots, v_{n-1})$
+is a function $f: V \to \{0,1\}$
+satisfying the following:
+for all $(v_{i0}, v_{i1}, v_{i2}) \in \rho$ we have
+$(f(v_{i0}), f(v_{i1}), f(v_{i2})) \notin \{(0,0,0), (1,1,1)\}$.
+
+
+A variation on this definition of \nae-3\sat allows
+negations of variables to appear in the tuples in $\rho$.
+Since this variation of the problem will be useful below, we give it a
+name---\naen-3\sat (not-all-equal-with-negation 3\sat),
+
+\begin{example}
+%% \subsubsection{Example: a non-satisfiable \naen-3\sat instance}
+Consider the following (non-satisfiable)
+instance of \naen-3\sat:
+let $V= \{v_0, v_1, v_2\}$ and define
+\[
+\rho(v_0, v_1, v_2) =
+\{(v_0, v_1, v_2), (\neg v_0, v_1, v_2), (v_0, \neg v_1, v_2), (v_0,
+v_1, \neg v_2)\}.
+\]
+Then $\rho(v_0, v_1, v_2)$ is not satisfiable because in order to make
+it so, we would need
+$(v_0, v_1, v_2) \notin \{ (0,0,0), (1,1,1)\}$ so that the
+first clause is \nae, and $(v_0, v_1, v_2) \notin \{(1,0,0), (0,1,1,)\}$
+so that the second clause is \nae, and 
+$(v_0, v_1, v_2) \notin \{ (0,1,0), (1,0,1)\}$ so that the third
+clause is \nae, and $(v_0, v_1, v_2) \notin \{(0,0,1), (1,1,0)\}$.
+\end{example}
+
+
+\section{Reduction of 3\sat to \nae-3\sat}
+In this section we recall how a 3\sat instance can be reduced to a
+\nae-3\sat instance.
+
+\vskip5mm
 (This section is under major revision.)
 
 % The problem \emph{not-all-equal satisfiability} (\nae-\sat) is a variation on \sat in which
@@ -201,7 +287,8 @@ not-all-equal, and $(x_0, x_1, x_2) \notin \{(0,0,1), (1,1,0)\}$.
 % because appropriate $v$ and $\neg v$ in each clause will prevent
 % all-three-true or all-three-false clauses.
 
-\subsection{Reduction of \nae-3\sat to \ccp}
+\section{Reduction of \nae-3\sat to \ccp}
+\label{sec:reduction-nae-3sat}
 Consider the relational structure $\mathbb B = \langle \{0, 1\}, R\rangle$
 where $R$ is the ternary relation $\{0, 1\}^3 - \{(0,0,0), (1,1,1)\}$.
 That is,
@@ -267,6 +354,14 @@ $s_1 = (a_1, b_1, c_1), s_2=(a_2, b_2, c_2), \dots, s_n =(a_n, b_n, c_n)$
 of triples with elements in $A$, decide whether all of the coatoms
 of the lattice $\prod_A$ of partitions of $A$ are contained in the union
 $ \bigcup_{i=1}^n \, ^\uparrow\langle \im s_i \rangle$ of principal filters.
+
+\section{Algorithms}
+We now discuss the tractability of
+the filter membership problem described in Section~\ref{sec:reduction-nae-3sat}.
+Specifically, we describe some first steps
+toward a polynomial-time algorithm for solving instances of \ccp.
+\vskip5mm
+(This section is under major revision.)
 
 
 %% \section{Definitions and Notations}
