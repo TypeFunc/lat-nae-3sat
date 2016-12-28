@@ -155,7 +155,15 @@ toward a polynomial-time algorithm for solving instances of \ccp.
 
 \subsection{Reduction of 3\sat to \nae-3\sat}
 ~
-
+First we find an instance of non-satisfiable NAE-3SAT. Let $\phi =
+\{(x_0, x_1, x_2), (\neg x_0, x_1, x_2), (x_0, \neg x_1, x_2), (x_0,
+x_1, \neg x_2)\}$. $\phi$ is not satisfiable because for it to be
+satisfiable, $(x_0, x_1, x_2) \notin \{ (0,0,0), (1,1,1)\}$ for the
+first clause to be not-all-equal, $(x_0, x_1, x_2) \notin \{(1,0,0),
+(0,1,1,)\}$ for the second clause to be not-all-equal, $(x_0, x_1,
+x_2) \notin \{ (0,1,0), (1,0,1)\}$ for the third clause to be
+not-all-equal, and $(x_0, x_1, x_2) \notin \{(0,0,1), (1,1,0)\}$.
+\vskip1cm
 (This section is under major revision.)
 
 % The problem \emph{not-all-equal satisfiability} (\nae-\sat) is a variation on \sat in which
