@@ -244,10 +244,12 @@ $(v_0, v_1, v_2) \notin \{ (0,1,0), (1,0,1)\}$ so that the third
 clause is \nae, and $(v_0, v_1, v_2) \notin \{(0,0,1), (1,1,0)\}$.
 \end{example}
 
+\section{Reductions}
 \subsection{Reduction of \naen-3\sat to \nae-3\sat}
-  An instance of \naen-3\sat can be reduced to an equivalent instance of
-\nae-3\sat, as we now explain.  Let $\rho(v_0, v_1, \dots, v_{n-1})$ be
-an instance of \naen-3\sat over the variable set
+\label{sec:reduction-naen-3sat}
+An instance of \naen-3\sat can be reduced (in polynomial time) to an
+equivalent instance of \nae-3\sat, as we now explain.  Let $\rho(v_0, v_1,
+\dots, v_{n-1})$ be an instance of \naen-3\sat over the variable set
 $V = \{v_0, v_1, \dots, v_{n-1}\}$.
 Introduce the variable sets $X = \{x_0, x_1, \dots, x_{n-1}\}$ and 
 $Y = \{y_0, y_1, \dots, y_{n-1}\}$, where $x_i = v_i$
@@ -281,13 +283,54 @@ values to $z$ and $z'$, and this in turn implies that,
 for each $i$, the variables $x_i$ and $y_i$
 must be assigned distinct values.  Thus, $y_i$ plays the role of $\neg x_i$, as desired.
 
-\section{Reduction of 3\sat to \nae-3\sat}
-In this section we recall how a 3\sat instance can be reduced to a
-\nae-3\sat instance.
+\subsection{Reduction of 3\sat to \naen-3\sat}
+In this section we describe a (polynomial-time) reduction from a 3\sat instance
+to an  \naen-3\sat instance.  Because of the reduction described in
+Section~\ref{sec:reduction-naen-3sat} above, this will prove that 
+a 3\sat instance can be reduced to an \nae-3\sat instance.
 
-\vskip5mm
-(This section is under major revision.)
+We will now decribe a procedure that takes an arbitrary instance $\phi$ 
+of 3\sat and transforms it into and instance $R$ of \naen-3\sat such that
+$\phi$ has a solution iff $R$ has a solution.
 
+Let $V = \{v_0, v_1, \dots, v_{n-1}\}$ be the set of variables and denote the
+given 3\sat instance as follows:
+\[
+\phi = (x_0 \join y_0 \join z_0) \meet (x_1 \join y_1 \join z_1) \meet 
+\cdots (x_{p-1} \join y_{p-1} \join z_{p-1}),
+\]
+where, for each $0\leq i< p$, the literals $x_i$, $y_i$, and $z_i$ each belong
+to the set 
+\[
+V \cup \neg V := 
+\{v_0, v_1, \dots, v_{n-1}\} \cup
+\{\neg v_0, \neg v_1, \dots, \neg v_{n-1}\}.
+\]
+We transform $\phi$ into an \naen-3\sat instance as follows:
+for each $0\leq i< p$, introduce new variables $w_i$ and $w_i'$, and map the
+clause
+$x_i \join y_i \join z_i$ to the set
+\[
+S_i = \{ (x_i, y_i, w_i), (y_i, z_i, w_i'), (w_i, w_i', 1)\}.
+\]
+If $S_i$ is a subset of a relation $R \subseteq (V \cup \neg V)^3$, 
+and if $R$ is an \naen-3\sat instance over the variable set
+$W:= V\cup \{w_i, w_i'\mid 0\leq i<p\}$, then a solution to $R$ 
+cannot assign both $w_i$ and $w_i'$ the value 1 
+(otherwise $(w_i, w_i', 1)$ would be mapped to $(1,1,1)$). 
+Now, consider the \naen-3\sat instance given by the relation
+$R = S_0 \cup S_1 \cup \cdots \cup S_{p-1}$.
+An assignment $f : V \to \{0,1\}$ is a solution to $\phi$ iff for all
+$0\leq i < p$ we have $(f(x_i), f(y_i), f(z_i)) \neq (0,0,0)$.
+Let $\tilde{f}: W \to \{0,1\}$ be define by
+\[
+\tilde{f}(u) = 
+  \begin{cases}
+    f(u), & \text{ if $u \in V\cup \neg V$,}\\
+    1-\delta, & \text{ if $u =w_i$ and $f(x_i) = f(y_i) = \delta$,}\\
+    1-\delta, & \text{ if $u =w_i'$ and $f(z_i) = f(y_i) = \delta$.}
+  \end{cases}
+\]
 % The problem \emph{not-all-equal satisfiability} (\nae-\sat) is a variation on \sat in which
 % a formula is satisfied if and only if each clause contains at least one true
 % literal and one false literal.  Thus, a clause is satisfied if and only
@@ -323,7 +366,7 @@ In this section we recall how a 3\sat instance can be reduced to a
 % because appropriate $v$ and $\neg v$ in each clause will prevent
 % all-three-true or all-three-false clauses.
 
-\section{Reduction of \nae-3\sat to \ccp}
+\subsection{Reduction of \nae-3\sat to \ccp}
 \label{sec:reduction-nae-3sat}
 Consider the relational structure $\mathbb B = \langle \{0, 1\}, R\rangle$
 where $R$ is the ternary relation $\{0, 1\}^3 - \{(0,0,0), (1,1,1)\}$.
